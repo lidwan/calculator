@@ -16,7 +16,17 @@ function divide(x, y){
     return x / y;
 }
 
-console.log(add(4, 3));
-console.log(subtract(4, 3));
-console.log(multiply(4, 3));
-console.log(divide(4, 3));
+let x, op, y;
+
+function operate(x, op, y) {
+    if(op === "+")
+        return add(x, y);
+    else if(op === "-")
+        return subtract(x, y);
+    else if(op === "*")
+        return multiply(x, y);
+    else if(op === "/")
+        return divide(x, y);
+}
+
+console.log(operate(4,"+",3));
