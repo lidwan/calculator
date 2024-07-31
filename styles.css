@@ -46,6 +46,7 @@ body, html{
     align-items: center;
     border-radius: 80%;
     background-color: rgb(224, 236, 51);
+    color: white;
 }
 
 .orange {
