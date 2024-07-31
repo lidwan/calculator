@@ -29,4 +29,31 @@ function operate(x, op, y) {
         return divide(x, y);
 }
 
-console.log(operate(4,"+",3));
+let calc =[];
+const screen = document.querySelector(".screen");
+
+function opClicked(event) {
+    op = event.target.textContent;
+}
+
+function numClicked(event) {
+    num = event.target.textContent;
+}
+
+function start() {
+const opButtons = document.querySelectorAll(".opration");
+opButtons.forEach((button) => {
+    button.addEventListener("click", opClicked);
+})
+
+const numButtons = document.querySelectorAll(".num");
+numButtons.forEach((button) => {
+    button.addEventListener("click", hola);
+})
+
+const eq = document.querySelector(".eq");
+eq.addEventListener("click", operate(x, op, y));
+
+}
+
+window.addEventListener("load", start);
