@@ -1,12 +1,12 @@
 //var
-let calc =[];
 const screen = document.querySelector(".screen");
 const opButtons = document.querySelectorAll(".opration");
 const numButtons = document.querySelectorAll(".num");
 const eq = document.querySelector(".eq");
 const acButton = document.querySelector("#clear");
-
-
+const history = document.querySelector(".history");
+const point = document.querySelector(".point");
+const plusminus = document.querySelector(".plusminus");
 
 let x = ""
 let op = "";
@@ -22,51 +22,84 @@ function start() {
 
     eq.addEventListener("click", operate);
     acButton.addEventListener("click", clear);
-
 }
 
 
 function numClickedX(event) {
-    x += event.target.textContent;
+    if(screen.textContent === 0)
+        x = event.target.textContent;
+    else
+        x += event.target.textContent;
     console.log(x);
     screen.textContent = x;
 
     opButtons.forEach((button) => {
         button.addEventListener("click", opClicked);
     });
+
+    point.addEventListener("click", pointClickedX);
+    plusminus.addEventListener("click", plusminusClickedX);
+
+
 }
 
+//ALL of this is for testing purposes, will refactor the funX, funY stuff later.
+
+function plusminusClickedX() {
+    x = x*-1;
+    console.log(x);
+    screen.textContent = x;
+}
 function opClicked (event) {
+    plusminus.removeEventListener("click", plusminusClickedX);
+    if(y) {
+        x = operate();
+        screen.textContent = `${x}${op}`;
+        y = "";
+    }
     numButtons.forEach((button) => {
         button.removeEventListener("click", numClickedX);
     });
-
+    
     op = event.target.textContent;
     console.log(op);
-    screen.textContent += op;
-
-    opButtons.forEach((button) => {
-        button.addEventListener("click", opClicked);
-    });
+    screen.textContent = `${x}${op}`;
 
     numButtons.forEach((button) => {
         button.addEventListener("click", numClickedY);
     });
-    if(y) {
-        x = operate();
-        screen.textContent = x;
-        y = "";
-    }
 }
 
 
 function numClickedY(event) {
     y += event.target.textContent;
     console.log(y);
-    screen.textContent += y;
+    screen.textContent = `${x}${op}${y}`;
+
+    point.addEventListener("click", pointClickedY);
+    plusminus.addEventListener("click", plusminusClickedY);
+
 }
 
+function plusminusClickedY() {
+    y = y*-1;
+    console.log(x);
+    screen.textContent = `${x}${op}${y}`;
+}
+function pointClickedX(event) {
+    x += ".";
+    console.log(x);
+    screen.textContent = x;
 
+    point.removeEventListener("click", pointClickedX);
+}
+function pointClickedY(event) {
+    y += ".";
+    console.log(y);
+    screen.textContent = `${x}${op}${y}`;
+
+    point.removeEventListener("click", pointClickedX);
+}
 function clear() {
     x = ""
     op = "";
@@ -81,6 +114,11 @@ function clear() {
     numButtons.forEach((button) => {
         button.removeEventListener("click", numClickedY);
     });
+    point.removeEventListener("click", pointClickedX);
+    point.removeEventListener("click", pointClickedY);
+    plusminus.addEventListener("click", plusminusClickedX);
+    plusminus.addEventListener("click", plusminusClickedY);
+
 }
 
 
@@ -98,12 +136,39 @@ function operate() {
         res = multiply(x, y);
     }
     else if(op === "/"){
-        res = divide(x, y);
+        if(y === 0)
+            res = "Really? LOL";
+        else
+            res = divide(x, y);
     }
+    else if(op === "%"){
+        //mod implemention TBA.
+    }
+    if(x && op &&(y || y === 0))
+        history.textContent += `${x}${op}${y} = ${res}, `;
     console.log(res)
     console.log(screen.textContent)
+    x = res;
+    op = ""
+    if(y === 0){
+        x = "";
+        opButtons.forEach((button) => {
+            button.removeEventListener("click", opClicked);
+        });
+        numButtons.forEach((button) => {
+            button.removeEventListener("click", numClickedY);
+        });
+        numButtons.forEach((button) => {
+            button.addEventListener("click", numClickedX);
+        });
+    }
+    y = ""
     screen.textContent = res;
     console.log(screen.textContent)
+
+    plusminus.removeEventListener("click", plusminusClickedY);
+    plusminus.addEventListener("click", plusminusClickedX);
+
     return res;
 
 }
